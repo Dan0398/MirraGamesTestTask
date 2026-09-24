@@ -1,5 +1,5 @@
-using System.Threading.Tasks;
 using UnityEngine.Networking;
+using System.Threading.Tasks;
 using UnityEngine;
 using System;
 
@@ -14,6 +14,7 @@ namespace Dan398.Time.Network
         public async Task<DateTime> GetServerTimeAsync()
         {
             using UnityWebRequest request = UnityWebRequest.Get(SyncUrl);
+            request.timeout = 5;
             await request.SendWebRequest().AsTask();
 
             if (request.result != UnityWebRequest.Result.Success)

@@ -13,6 +13,7 @@ namespace Dan398.Time.Controller
         [SerializeField] private EditPanelView panel;
 
         [Inject] private AppClock appClock;
+        [Inject] private TimeSyncController timeSyncController;
 
         public event Action<DateTime> DraftChanged;
 
@@ -40,6 +41,13 @@ namespace Dan398.Time.Controller
         {
             if (!editing) return;
             Exit();
+        }
+
+        public void Resync()
+        {
+            if (!editing) return;
+            Exit();
+            _ = timeSyncController.SyncWithServerAsync();
         }
 
         public void AddDraftHours(int delta)

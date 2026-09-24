@@ -78,12 +78,12 @@ namespace Dan398.UI
 
         public float GetAlpha()
         {
-            return graphics[0].color.a;
+            return graphics.Length > 0 ? graphics[0].color.a : 1f;
         }
 
         public Color GetColor()
         {
-            return graphics[0].color;
+            return graphics.Length > 0 ? graphics[0].color : Color.white;
         }
     }
 }

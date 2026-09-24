@@ -1,7 +1,7 @@
 using Dan398.Time.Controller;
-using TMPro;
 using UnityEngine;
 using System;
+using TMPro;
 
 namespace Dan398.Time.View
 {
@@ -48,6 +48,11 @@ namespace Dan398.Time.View
         public void Button_CancelClicked()
         {
             controller.Cancel();
+        }
+
+        public void Button_ResetClicked()
+        {
+            controller.Resync();
         }
 
         public void InputField_AnyFieldEdited()

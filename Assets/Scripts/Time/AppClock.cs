@@ -31,14 +31,14 @@ namespace Dan398.Time
 
         void ITickable.Tick()
         {
-            long second = Now.Ticks / TimeSpan.TicksPerSecond;
+            DateTime currentTime = Now;
+            long second = currentTime.Ticks / TimeSpan.TicksPerSecond;
             if (second == lastSecond)
             {
                 return;
             }
 
             lastSecond = second;
-            DateTime currentTime = Now;
 
             SecondChanged?.Invoke(currentTime);
             if (currentTime.Second == 0)

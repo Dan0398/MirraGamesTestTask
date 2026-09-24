@@ -74,6 +74,12 @@ namespace Dan398.UI
         private void ApplyColor(Color target)
         {
             colorTween?.Kill();
+            if (elements.Length == 0)
+            {
+                Debug.LogError($"[UiAnimationController] elements are not assigned on '{name}'", this);
+                return;
+            }
+
             MaskedImageRecolorer mask = elements[0].mask;
             colorTween = DOTween.To(mask.GetColor, SetColorToAll, target, 1f);
         }

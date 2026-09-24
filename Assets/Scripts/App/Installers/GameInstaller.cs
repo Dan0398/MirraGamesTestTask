@@ -1,6 +1,5 @@
 using Dan398.Time.Controller;
 using Dan398.Time.Network;
-using Dan398.Time.View;
 using Dan398.Time;
 using Zenject;
 
@@ -20,8 +19,7 @@ namespace Dan398.App.Installers
                 .AsSingle();
 
             Container.BindInterfacesAndSelfTo<AppClock>().AsSingle();
-            Container.BindInterfacesTo<TimeSyncController>().AsSingle();
-            Container.BindInterfacesTo<ConsoleClockView>().AsSingle();
+            Container.BindInterfacesAndSelfTo<TimeSyncController>().AsSingle();
         }
     }
 }

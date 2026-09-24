@@ -1,7 +1,7 @@
 using UnityEngine;
 using Zenject;
-using TMPro;
 using System;
+using TMPro;
 
 namespace Dan398.Time.View
 {
@@ -14,6 +14,7 @@ namespace Dan398.Time.View
 
         private void Start()
         {
+            OnSecondChanged(appClock.Now);
             appClock.SecondChanged += OnSecondChanged;
         }
 

@@ -15,6 +15,7 @@ namespace Dan398.Time.View
         public event Action<float> Dragged;
 
         private bool dragging;
+        private bool hovered;
         private float previousAngle;
 
         public void OnPointerDown(PointerEventData eventData)
@@ -31,6 +32,10 @@ namespace Dan398.Time.View
         public void OnPointerUp(PointerEventData eventData)
         {
             dragging = false;
+            if (!hovered)
+            {
+                hoverExited?.Invoke();
+            }
         }
 
         public void OnDrag(PointerEventData eventData)
@@ -50,12 +55,17 @@ namespace Dan398.Time.View
 
         public void OnPointerEnter(PointerEventData eventData)
         {
+            hovered = true;
             hoverEntered?.Invoke();
         }
 
         public void OnPointerExit(PointerEventData eventData)
         {
-            hoverExited?.Invoke();
+            hovered = false;
+            if (!dragging)
+            {
+                hoverExited?.Invoke();
+            }
         }
 
         private bool TryGetAngle(PointerEventData eventData, out float angle)
