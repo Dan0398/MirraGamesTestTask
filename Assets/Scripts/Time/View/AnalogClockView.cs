@@ -16,6 +16,8 @@ namespace Dan398.Time.View
         [Inject] private AppClock appClock;
 
         private float secondArrowAngle;
+        private bool drafting;
+        private DateTime draftTime;
 
         private void Start()
         {
@@ -29,10 +31,11 @@ namespace Dan398.Time.View
 
         private void Update()
         {
-            TimeSpan timeOfDay = appClock.Now.ToLocalTime().TimeOfDay;
+            DateTime time = drafting ? draftTime : appClock.Now.ToLocalTime();
+            TimeSpan timeOfDay = time.TimeOfDay;
             hourArrow.localEulerAngles = new Vector3(0f, 0f, -(float)(timeOfDay.TotalHours % 12) * 30f);
             minuteArrow.localEulerAngles = new Vector3(0f, 0f, -(float)(timeOfDay.TotalMinutes % 60) * 6f);
-            if (smoothSecond)
+            if (smoothSecond || drafting)
             {
                 secondArrow.localEulerAngles = new Vector3(0f, 0f, -(float)(timeOfDay.TotalSeconds % 60) * 6f);
             }
@@ -47,8 +50,22 @@ namespace Dan398.Time.View
             }
         }
 
+        public void ShowDraft(DateTime time)
+        {
+            drafting = true;
+            draftTime = time;
+            secondArrow.DOKill();
+        }
+
+        public void ShowLive()
+        {
+            drafting = false;
+            secondArrowAngle = -(float)(appClock.Now.ToLocalTime().TimeOfDay.TotalSeconds % 60) * 6f - 360f;
+        }
+
         private void OnSecondChanged(DateTime time)
         {
+            if (drafting) return;
             DateTime localTime = time.ToLocalTime();
             float targetAngle = -(float)(localTime.TimeOfDay.TotalSeconds % 60) * 6f;
             while (targetAngle > secondArrowAngle)

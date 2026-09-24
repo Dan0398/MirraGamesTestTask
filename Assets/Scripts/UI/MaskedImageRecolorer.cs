@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine;
 using System;
@@ -7,11 +8,26 @@ namespace Dan398.UI
     public sealed class MaskedImageRecolorer : MonoBehaviour
     {
         private MaskableGraphic[] graphics;
+        private RecolorProxy[] proxies;
         private Color[] initialColors;
 
         private void Awake()
         {
-            graphics = GetComponentsInChildren<MaskableGraphic>(true);
+            proxies = GetComponentsInChildren<RecolorProxy>(true);
+            List<MaskableGraphic> collected = new List<MaskableGraphic>(GetComponentsInChildren<MaskableGraphic>(true));
+            for (int i = collected.Count - 1; i >= 0; i--)
+            {
+                for (int p = 0; p < proxies.Length; p++)
+                {
+                    if (proxies[p].Owns(collected[i]))
+                    {
+                        collected.RemoveAt(i);
+                        break;
+                    }
+                }
+            }
+
+            graphics = collected.ToArray();
             initialColors = new Color[graphics.Length];
             for (int i = 0; i < graphics.Length; i++)
             {
@@ -26,6 +42,11 @@ namespace Dan398.UI
                 Color current = graphics[i].color;
                 graphics[i].color = new Color(color.r, color.g, color.b, current.a);
             }
+
+            for (int i = 0; i < proxies.Length; i++)
+            {
+                proxies[i].SetColor(color);
+            }
         }
 
         public void RestoreColors()
@@ -33,6 +54,11 @@ namespace Dan398.UI
             for (int i = 0; i < graphics.Length; i++)
             {
                 graphics[i].color = initialColors[i];
+            }
+
+            for (int i = 0; i < proxies.Length; i++)
+            {
+                proxies[i].RestoreColors();
             }
         }
 
@@ -42,6 +68,11 @@ namespace Dan398.UI
             {
                 Color current = graphics[i].color;
                 graphics[i].color = new Color(current.r, current.g, current.b, alpha);
+            }
+
+            for (int i = 0; i < proxies.Length; i++)
+            {
+                proxies[i].SetAlpha(alpha);
             }
         }
 
